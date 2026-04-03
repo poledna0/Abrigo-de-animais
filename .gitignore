@@ -24,3 +24,6 @@ target
 # Added by cargo
 
 /target
+
+# Arquivo interno de melhorias
+MELHORIAS.md

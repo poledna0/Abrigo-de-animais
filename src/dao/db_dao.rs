@@ -1,5 +1,5 @@
-use rusqlite::{Connection, Result};
 use crate::model::estrutura_abrigo::{Animais, Tutor};
+use rusqlite::{Connection, Result};
 
 pub struct AnimalDAO {
     pub conn: Connection,
@@ -8,6 +8,8 @@ pub struct AnimalDAO {
 impl AnimalDAO {
     pub fn new() -> Result<Self> {
         let conn: Connection = Connection::open("abrigo.db")?;
+
+        conn.execute("PRAGMA foreign_keys = ON", [])?;
 
         // tabela tutor
         conn.execute(
@@ -51,7 +53,12 @@ impl AnimalDAO {
         self.conn.execute(
             "INSERT INTO animal (idade, nome_animal, raca_animal, tutor_id)
              VALUES (?1, ?2, ?3, ?4)",
-            (&animal.idade, &animal.nome_animal, &animal.raca_animal, &tutor_id),
+            (
+                &animal.idade,
+                &animal.nome_animal,
+                &animal.raca_animal,
+                &tutor_id,
+            ),
         )?;
         animal.id = Some(self.conn.last_insert_rowid() as u32);
         Ok(())
@@ -60,11 +67,11 @@ impl AnimalDAO {
     // listar todos os animais
     pub fn listar_animais(&self) -> Result<Vec<Animais>> {
         let mut stmt = self.conn.prepare(
-            "SELECT 
+            "SELECT
                 a.id, a.idade, a.nome_animal, a.raca_animal,
                 t.id, t.nome, t.idade
              FROM animal a
-             LEFT JOIN tutor t ON a.tutor_id = t.id"
+             LEFT JOIN tutor t ON a.tutor_id = t.id",
         )?;
 
         let animais_iter = stmt.query_map([], |row| {
@@ -96,12 +103,12 @@ impl AnimalDAO {
     // listar apenas animais de um tutor
     pub fn listar_animais_do_tutor(&self, tutor_id: u32) -> Result<Vec<Animais>> {
         let mut stmt = self.conn.prepare(
-            "SELECT 
+            "SELECT
                 a.id, a.idade, a.nome_animal, a.raca_animal,
                 t.id, t.nome, t.idade
              FROM animal a
              JOIN tutor t ON a.tutor_id = t.id
-             WHERE t.id = ?1"
+             WHERE t.id = ?1",
         )?;
 
         let animais_iter = stmt.query_map([tutor_id], |row| {
@@ -140,25 +147,49 @@ impl AnimalDAO {
         self.conn.execute(
             "UPDATE animal SET idade = ?1, nome_animal = ?2, raca_animal = ?3, tutor_id = ?4
              WHERE id = ?5",
-            (&animal.idade, &animal.nome_animal, &animal.raca_animal, &tutor_id, &animal.id),
+            (
+                &animal.idade,
+                &animal.nome_animal,
+                &animal.raca_animal,
+                &tutor_id,
+                &animal.id,
+            ),
         )?;
         Ok(())
     }
 
     // remover
     pub fn remover_animal(&self, animal_id: u32) -> Result<()> {
-        self.conn.execute(
-            "DELETE FROM animal WHERE id = ?1",
-            [animal_id],
-        )?;
+        self.conn
+            .execute("DELETE FROM animal WHERE id = ?1", [animal_id])?;
         Ok(())
+    }
+
+    pub fn listar_tutores(&self) -> Result<Vec<Tutor>> {
+        let mut stmt = self.conn.prepare("SELECT id, nome, idade FROM tutor")?;
+
+        let tutores_iter = stmt.query_map([], |row| {
+            Ok(Tutor {
+                id: row.get(0)?,
+                nome: row.get(1)?,
+                idade: row.get(2)?,
+            })
+        })?;
+
+        let mut lista = Vec::new();
+        for t in tutores_iter {
+            lista.push(t?);
+        }
+        Ok(lista)
     }
 
     pub fn remover_tutor(&self, tutor_id: u32) -> Result<()> {
         self.conn.execute(
-            "DELETE FROM tutor WHERE id = ?1",
+            "UPDATE animal SET tutor_id = NULL WHERE tutor_id = ?1",
             [tutor_id],
         )?;
+        self.conn
+            .execute("DELETE FROM tutor WHERE id = ?1", [tutor_id])?;
         Ok(())
     }
 }
