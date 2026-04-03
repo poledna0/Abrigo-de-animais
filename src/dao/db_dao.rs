@@ -145,11 +145,19 @@ impl AnimalDAO {
         Ok(())
     }
 
-    // remover animal
+    // remover
     pub fn remover_animal(&self, animal_id: u32) -> Result<()> {
         self.conn.execute(
             "DELETE FROM animal WHERE id = ?1",
             [animal_id],
+        )?;
+        Ok(())
+    }
+
+    pub fn remover_tutor(&self, tutor_id: u32) -> Result<()> {
+        self.conn.execute(
+            "DELETE FROM tutor WHERE id = ?1",
+            [tutor_id],
         )?;
         Ok(())
     }
