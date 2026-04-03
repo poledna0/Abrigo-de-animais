@@ -91,6 +91,24 @@ pub fn adicionar_animal(dao: &AnimalDAO) {
     }
 }
 
+pub fn listar_todos_tutores(dao: &AnimalDAO) {
+    match dao.listar_tutores() {
+        Ok(tutores) => {
+            if tutores.is_empty() {
+                println!("Nenhum tutor cadastrado.");
+                return;
+            }
+            for tutor in tutores {
+                println!(
+                    "ID: {:?}, Nome: {}, Idade: {}",
+                    tutor.id, tutor.nome, tutor.idade
+                );
+            }
+        }
+        Err(err) => println!("Erro ao listar tutores: {}", err),
+    }
+}
+
 pub fn listar_todos_animais(dao: &AnimalDAO) {
     match dao.listar_animais() {
         Ok(animais) => {
