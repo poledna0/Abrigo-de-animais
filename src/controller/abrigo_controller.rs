@@ -26,6 +26,11 @@ impl Tutor {
 
 pub fn adicionar_tutor(dao: &AnimalDAO) {
     let nome = cli_abrigo::read_input("Nome do tutor: ");
+    if nome.is_empty() {
+        println!("O nome do tutor não pode ser vazio.");
+        return;
+    }
+
     let idade = cli_abrigo::read_input("Idade do tutor: ");
 
     let idade: u8 = match cli_abrigo::parse_u8(&idade) {
@@ -45,8 +50,17 @@ pub fn adicionar_tutor(dao: &AnimalDAO) {
 
 pub fn adicionar_animal(dao: &AnimalDAO) {
     let nome_animal = cli_abrigo::read_input("Nome do animal: ");
+    if nome_animal.is_empty() {
+        println!("O nome do animal não pode ser vazio.");
+        return;
+    }
+
     let idade = cli_abrigo::read_input("Idade do animal: ");
     let raca = cli_abrigo::read_input("Raça do animal: ");
+    if raca.is_empty() {
+        println!("A raça do animal não pode ser vazia.");
+        return;
+    }
     let tutor_id_txt = cli_abrigo::read_input("ID do tutor (deixe vazio para nenhum): ");
 
     let idade: u8 = match cli_abrigo::parse_u8(&idade) {
@@ -161,9 +175,19 @@ pub fn atualizar_tutor_animal(dao: &AnimalDAO) {
 
 pub fn editar_animal(dao: &AnimalDAO) {
     let animal_id_txt = cli_abrigo::read_input("ID do animal: ");
+
     let nome_animal = cli_abrigo::read_input("Nome do animal: ");
+    if nome_animal.is_empty() {
+        println!("O nome do animal não pode ser vazio.");
+        return;
+    }
+
     let idade_txt = cli_abrigo::read_input("Idade do animal: ");
     let raca = cli_abrigo::read_input("Raça do animal: ");
+    if raca.is_empty() {
+        println!("A raça do animal não pode ser vazia.");
+        return;
+    }
     let tutor_id_txt = cli_abrigo::read_input("ID do tutor (deixe vazio para nenhum): ");
 
     let animal_id: u32 = match cli_abrigo::parse_u32(&animal_id_txt) {
