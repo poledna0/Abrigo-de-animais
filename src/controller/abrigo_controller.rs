@@ -1,17 +1,26 @@
-use crate::model::estrutura_abrigo::*;
 use crate::dao::db_dao::*;
+use crate::model::estrutura_abrigo::*;
 use crate::view::*;
 
-
-impl Animais{
-    pub fn new(idade: u8, nome_animal: String, raca_animal: String, tutor:Option<Tutor>) -> Self{
-        Animais {id: None, idade: idade, nome_animal, raca_animal, tutor:tutor }
+impl Animais {
+    pub fn new(idade: u8, nome_animal: String, raca_animal: String, tutor: Option<Tutor>) -> Self {
+        Animais {
+            id: None,
+            idade,
+            nome_animal,
+            raca_animal,
+            tutor,
+        }
     }
 }
 
-impl Tutor{
+impl Tutor {
     pub fn new(nome: String, idade: u8) -> Self {
-        Tutor {id: None, nome, idade}
+        Tutor {
+            id: None,
+            nome,
+            idade,
+        }
     }
 }
 
@@ -54,7 +63,11 @@ pub fn adicionar_animal() {
     let tutor = if tutor_id_txt.is_empty() {
         None
     } else if let Some(id) = cli_abrigo::parse_u32(&tutor_id_txt) {
-        Some(Tutor { id: Some(id), nome: String::new(), idade: 0 })
+        Some(Tutor {
+            id: Some(id),
+            nome: String::new(),
+            idade: 0,
+        })
     } else {
         println!("ID do tutor inválido.");
         return;
@@ -80,10 +93,16 @@ pub fn listar_todos_animais() {
                 }
                 for animal in animais {
                     let tutor_info = match animal.tutor {
-                        Some(tutor) => format!("Tutor {{ id: {:?}, nome: {}, idade: {} }}", tutor.id, tutor.nome, tutor.idade),
+                        Some(tutor) => format!(
+                            "Tutor {{ id: {:?}, nome: {}, idade: {} }}",
+                            tutor.id, tutor.nome, tutor.idade
+                        ),
                         None => "Sem tutor".to_string(),
                     };
-                    println!("ID: {:?}, Nome: {}, Idade: {}, Raça: {}, {}", animal.id, animal.nome_animal, animal.idade, animal.raca_animal, tutor_info);
+                    println!(
+                        "ID: {:?}, Nome: {}, Idade: {}, Raça: {}, {}",
+                        animal.id, animal.nome_animal, animal.idade, animal.raca_animal, tutor_info
+                    );
                 }
             }
             Err(err) => println!("Erro ao listar animais: {}", err),
@@ -110,7 +129,10 @@ pub fn listar_animais_tutor() {
                     return;
                 }
                 for animal in animais {
-                    println!("ID: {:?}, Nome: {}, Idade: {}, Raça: {}", animal.id, animal.nome_animal, animal.idade, animal.raca_animal);
+                    println!(
+                        "ID: {:?}, Nome: {}, Idade: {}, Raça: {}",
+                        animal.id, animal.nome_animal, animal.idade, animal.raca_animal
+                    );
                 }
             }
             Err(err) => println!("Erro ao listar animais do tutor: {}", err),
@@ -177,7 +199,11 @@ pub fn editar_animal() {
     let tutor = if tutor_id_txt.is_empty() {
         None
     } else if let Some(id) = cli_abrigo::parse_u32(&tutor_id_txt) {
-        Some(Tutor { id: Some(id), nome: String::new(), idade: 0 })
+        Some(Tutor {
+            id: Some(id),
+            nome: String::new(),
+            idade: 0,
+        })
     } else {
         println!("ID do tutor inválido.");
         return;
