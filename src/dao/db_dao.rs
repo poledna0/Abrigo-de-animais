@@ -7,7 +7,7 @@ pub struct AnimalDAO {
 
 impl AnimalDAO {
     pub fn new() -> Result<Self> {
-        let conn = Connection::open("abrigo.db")?;
+        let conn: Connection = Connection::open("abrigo.db")?;
 
         // tabela tutor
         conn.execute(
