@@ -9,6 +9,8 @@ impl AnimalDAO {
     pub fn new() -> Result<Self> {
         let conn: Connection = Connection::open("abrigo.db")?;
 
+        conn.execute("PRAGMA foreign_keys = ON", [])?;
+
         // tabela tutor
         conn.execute(
             "CREATE TABLE IF NOT EXISTS tutor (
@@ -182,6 +184,10 @@ impl AnimalDAO {
     }
 
     pub fn remover_tutor(&self, tutor_id: u32) -> Result<()> {
+        self.conn.execute(
+            "UPDATE animal SET tutor_id = NULL WHERE tutor_id = ?1",
+            [tutor_id],
+        )?;
         self.conn
             .execute("DELETE FROM tutor WHERE id = ?1", [tutor_id])?;
         Ok(())
