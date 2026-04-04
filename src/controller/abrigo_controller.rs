@@ -1,4 +1,4 @@
-use crate::dao::db_dao::*;
+use crate::dao::*;
 use crate::model::estrutura_abrigo::*;
 use crate::view::*;
 
@@ -24,7 +24,7 @@ impl Tutor {
     }
 }
 
-pub fn adicionar_tutor(dao: &AnimalDAO) {
+pub fn adicionar_tutor(dao: &db_dao::AnimalDAO) {
     let nome = cli_abrigo::read_input("Nome do tutor: ");
     if nome.is_empty() {
         println!("O nome do tutor não pode ser vazio.");
@@ -48,7 +48,7 @@ pub fn adicionar_tutor(dao: &AnimalDAO) {
     }
 }
 
-pub fn adicionar_animal(dao: &AnimalDAO) {
+pub fn adicionar_animal(dao: &db_dao::AnimalDAO) {
     let nome_animal = cli_abrigo::read_input("Nome do animal: ");
     if nome_animal.is_empty() {
         println!("O nome do animal não pode ser vazio.");
@@ -91,7 +91,7 @@ pub fn adicionar_animal(dao: &AnimalDAO) {
     }
 }
 
-pub fn listar_todos_tutores(dao: &AnimalDAO) {
+pub fn listar_todos_tutores(dao: &db_dao::AnimalDAO) {
     match dao.listar_tutores() {
         Ok(tutores) => {
             if tutores.is_empty() {
@@ -109,7 +109,7 @@ pub fn listar_todos_tutores(dao: &AnimalDAO) {
     }
 }
 
-pub fn listar_todos_animais(dao: &AnimalDAO) {
+pub fn listar_todos_animais(dao: &db_dao::AnimalDAO) {
     match dao.listar_animais() {
         Ok(animais) => {
             if animais.is_empty() {
@@ -134,7 +134,7 @@ pub fn listar_todos_animais(dao: &AnimalDAO) {
     }
 }
 
-pub fn listar_animais_tutor(dao: &AnimalDAO) {
+pub fn listar_animais_tutor(dao: &db_dao::AnimalDAO) {
     let tutor_id_txt = cli_abrigo::read_input("ID do tutor: ");
     let tutor_id: u32 = match cli_abrigo::parse_u32(&tutor_id_txt) {
         Some(i) => i,
@@ -161,7 +161,7 @@ pub fn listar_animais_tutor(dao: &AnimalDAO) {
     }
 }
 
-pub fn atualizar_tutor_animal(dao: &AnimalDAO) {
+pub fn atualizar_tutor_animal(dao: &db_dao::AnimalDAO) {
     let animal_id_txt = cli_abrigo::read_input("ID do animal: ");
     let tutor_id_txt = cli_abrigo::read_input("ID do novo tutor (deixe vazio para nenhum): ");
 
@@ -191,7 +191,7 @@ pub fn atualizar_tutor_animal(dao: &AnimalDAO) {
     }
 }
 
-pub fn editar_animal(dao: &AnimalDAO) {
+pub fn editar_animal(dao: &db_dao::AnimalDAO) {
     let animal_id_txt = cli_abrigo::read_input("ID do animal: ");
 
     let nome_animal = cli_abrigo::read_input("Nome do animal: ");
@@ -251,7 +251,7 @@ pub fn editar_animal(dao: &AnimalDAO) {
     }
 }
 
-pub fn remover_animal(dao: &AnimalDAO) {
+pub fn remover_animal(dao: &db_dao::AnimalDAO) {
     let animal_id_txt = cli_abrigo::read_input("ID do animal: ");
     let animal_id: u32 = match cli_abrigo::parse_u32(&animal_id_txt) {
         Some(i) => i,
@@ -267,7 +267,7 @@ pub fn remover_animal(dao: &AnimalDAO) {
     }
 }
 
-pub fn remover_tutor(dao: &AnimalDAO) {
+pub fn remover_tutor(dao: &db_dao::AnimalDAO) {
     let tutor_id_txt = cli_abrigo::read_input("ID do tutor: ");
     let tutor_id: u32 = match cli_abrigo::parse_u32(&tutor_id_txt) {
         Some(i) => i,
